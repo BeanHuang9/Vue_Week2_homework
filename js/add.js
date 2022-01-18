@@ -23,7 +23,7 @@ createApp({
         document.cookie = `hexToken=${token};expires=${new Date(expired)}; path=/`;
         window.location = 'products.html';
       }).catch((error) => {
-        alert('帳號或密碼錯誤！');
+        alert('帳號或密碼錯誤!');
         this.is_err = 1;
       });
     },
