@@ -20,7 +20,7 @@ createApp({
         //console.log(res); 了解後端回來的結構
         const { token, expired } = res.data;
        
-        document.cookie = `hexToken=${token};expires=${new Date(expired)}; path=/`;
+        document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
         window.location = 'products.html';
       }).catch((error) => {
         alert('帳號或密碼錯誤!');
