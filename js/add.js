@@ -1,7 +1,7 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-const url = 'https://vue3-course-api.hexschool.io/v2'; 
-const path = 'beanhuang';
+const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
+const apiPath = 'beanhuang';
   
 createApp({
   data() {
@@ -15,7 +15,7 @@ createApp({
   },
   methods: {
     login() {
-      const api = `${url}/admin/signin`;
+      const api = `${apiUrl}/admin/signin`;
       axios.post(api, this.user).then((res) => {
         //console.log(res); 了解後端回來的結構
         const { token, expired } = res.data;

@@ -10,7 +10,7 @@ createApp({
     }
   },
   methods: {
-    checkAdmin() {
+    checkLogin() {
       const url = `${this.apiUrl}/api/user/check`;
       axios.post(url)
         .then(() => {
@@ -24,8 +24,8 @@ createApp({
     getData() {
       const url = `${this.apiUrl}/api/${this.apiPath}/admin/products`;
       axios.get(url)
-        .then((response) => {
-          this.products = response.data.products;
+        .then((res) => {
+          this.products = res.data.products;
         })
         .catch((err) => {
           alert(err.data.message);
@@ -33,13 +33,12 @@ createApp({
     },
     openProduct(item) {
       this.tempProduct = item;
-    }
+    },
   },
   mounted() {
-    // 取出 Token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
     axios.defaults.headers.common.Authorization = token;
 
-    this.checkAdmin()
+    this.checkLogin()
   }
 }).mount('#app');
