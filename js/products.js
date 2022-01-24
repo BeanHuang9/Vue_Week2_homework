@@ -11,6 +11,9 @@ createApp({
   },
   methods: {
     checkLogin() {
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+      axios.defaults.headers.common.Authorization = token;
+      
       const url = `${this.apiUrl}/api/user/check`;
       axios.post(url)
         .then(() => {
@@ -36,9 +39,6 @@ createApp({
     },
   },
   mounted() {
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    axios.defaults.headers.common.Authorization = token;
-
     this.checkLogin()
   }
 }).mount('#app');
