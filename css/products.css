@@ -1,0 +1,46 @@
+
+table.proTable {
+  width:100%;
+  table-layout: fixed;
+}
+
+table.proTable th {
+  padding: 20px 15px;
+  text-align: left;
+  font-weight: 500;
+  color: #3b3b3b;
+}
+table.proTable td {
+  padding: 15px;
+  text-align: left;
+  vertical-align:middle;
+  font-weight: 300;
+  color: #3b3b3b;
+  border-bottom: solid 1px rgba(255,255,255,0.1);
+}
+
+table.proTable thead{
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* demo styles */
+
+body{
+  background: -webkit-linear-gradient(left, #cfd9df, #e2ebf0);
+  background: linear-gradient(to right, #cfd9df, #e2ebf0);
+  font-family: 'Roboto', sans-serif;
+}
+
+
+
+/* for custom scrollbar for webkit browser*/
+
+::-webkit-scrollbar {
+    width: 6px;
+} 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+} 
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
