@@ -10,6 +10,8 @@ let delProductModal = null;
 createApp({
   data() {
     return {
+      // apiUrl = 'https://vue3-course-api.hexschool.io/v2',
+      // apiPath = 'beanhuang',
       products: [],
       addNewProduct: false,
       tempProduct: {
@@ -19,6 +21,10 @@ createApp({
   },
   methods: {
     checkLogin() {
+      // 取出 Token
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+      axios.defaults.headers.common.Authorization = token;
+      
       const url = `${apiUrl}/api/user/check`;
       axios.post(url)
         .then(() => {
@@ -99,9 +105,7 @@ createApp({
 
   },
   mounted() {
-    // 取出 Token
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
-    axios.defaults.headers.common.Authorization = token;
+    
     
     productModal = new bootstrap.Modal(document.getElementById('productModal'), {
       keyboard: false
