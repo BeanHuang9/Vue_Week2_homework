@@ -1,28 +1,28 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-//宣告在外面 createApp 裡面要把this. 拿掉
-// const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
-// const apiPath = 'beanhuang';
-
 let productModal = null;
 let delProductModal = null;
 
-createApp({
+const app =createApp({
   data() {
     return {
-      apiUrl = 'https://vue3-course-api.hexschool.io/v2',
-      apiPath = 'beanhuang',
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'beanhuang',
       products: [],
-      addNewProduct: false,
       tempProduct: {
         imagesUrl: [],
       },
+      pagination: {},
+      isNew: false,
     }
   },
+  mounted() {
+    
+    this.checkAdmin();
+  },
   methods: {
-    checkLogin() {
-      // 取出 Token
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+    checkAdmin() {
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
       axios.defaults.headers.common.Authorization = token;
       
       const url = `${this.apiUrl}/api/user/check`;
@@ -35,86 +35,131 @@ createApp({
           window.location = 'index.html';
         })
     },
-    getData() { //取得所有產品列表
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products`;
+    getData(page = 1) {// 參數預設值(pagination)
+      //query(使用?代 [?page=${page}] ) 、 param
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products?page=${page}`;
+
       axios.get(url)
-        .then((res) => {
-          this.products = res.data.products;
-        })
-        .catch((err) => {
+        .then((response) => {
+          const { products, pagination } = response.data;
+          this.products = products;
+          this.pagination = pagination;
+        }).catch((err) => {
           alert(err.data.message);
+          window.location = 'index.html';
         })
     },
-    openProduct(item) {
-      this.tempProduct = item;
-    },
-
-    checkProducts() {//更新產品
-      //請求方式寫成變數主要是為了流程判斷
-      let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
-      let http = 'post';
-
-      if (!this.addNewProduct) { //如果產品就變更
-        url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
-        http = 'put'
-      }
-
-      axios[http](url, { data: this.tempProduct }).then((response) => {
-        alert(response.data.message);
-        productModal.hide();
-        this.getData(); //重渲染
-      }).catch((err) => {
-        alert(err.data.message);
-      })
-    },
-
-    //建立新產品
-    openModal(addNewProduct, item) {
-      if (addNewProduct === 'new') {//addNewProduct若是新的,this.tempProduct建立
+    openModal(isNew, item) {
+      if (isNew === 'new') {
         this.tempProduct = {
           imagesUrl: [],
         };
-        this.addNewProduct = true;
+        this.isNew = true;
         productModal.show();
-      } else if (addNewProduct === 'edit') { // 修改已新增過的產品
+      } else if (isNew === 'edit') {
         this.tempProduct = { ...item };
-        this.addNewProduct = false;
+        this.isNew = false;
         productModal.show();
-      } else if (addNewProduct === 'delete') { //刪除已新增過的產品
+      } else if (isNew === 'delete') {
         this.tempProduct = { ...item };
         delProductModal.show()
       }
     },
+  },
+});
 
-    delProduct() {//刪除產品
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
-
-      axios.delete(url).then((response) => {
-        alert(response.data.message);
-        delProductModal.hide();
-        this.getData();
-      }).catch((err) => {
-        alert(err.data.message);
-      })
+// 分頁元件
+app.component('pagination', {
+  template: '#pagination',
+  props: ['pages'],
+  methods: {
+    emitPages(item) {
+      this.$emit('emit-pages', item); //觸發外層
     },
-    createImages() {
-      this.tempProduct.imagesUrl = [];
-      this.tempProduct.imagesUrl.push('');
-    },
+  },
+});
 
-
+// 產品新增/編輯元件
+app.component('productModal', {
+  template: '#productModal',
+  props: ['product', 'isNew'],
+  data() {
+    return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'beanhuang',
+    };
   },
   mounted() {
-    
-    
     productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-      keyboard: false
+      keyboard: false,
+      backdrop: 'static'
     });
+  },
+  methods: {
+    updateProduct() {
+      // 新增商品
+      let api = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
+      let httpMethod = 'post';
+      // 當不是新增商品時則切換成編輯商品 API
+      if (!this.isNew) {
+        api = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.product.id}`;
+        httpMethod = 'put';
+      }
 
+      axios[httpMethod](api, { data: this.product }).then((response) => {
+        alert(response.data.message);
+        this.hideModal();
+        this.$emit('update'); //觸發外層
+      }).catch((error) => {
+        alert(error.data.message);
+      });
+    },
+    createImages() {
+      this.product.imagesUrl = [];
+      this.product.imagesUrl.push('');
+    },
+    openModal() {
+      productModal.show();
+    },
+    hideModal() {
+      productModal.hide();
+    },
+  },
+})
+// 產品刪除元件
+app.component('delProductModal', {
+  template: '#delProductModal',
+  props: ['item'],
+  data() {
+    return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'beanhuang',
+    };
+  },
+  mounted() {
     delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'), {
-      keyboard: false
+      keyboard: false,
+      backdrop: 'static',
     });
+  },
+  methods: {
+    delProduct() {
+      axios.delete(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.item.id}`).then((response) => {
+        this.hideModal();
+        this.$emit('update'); //觸發外層
+      }).catch((error) => {
+        alert(error.data.message);
+      });
+    },
+    openModal() {
+      delProductModal.show();
+    },
+    hideModal() {
+      delProductModal.hide();
+    },
+  },
+});
 
-    this.checkLogin() //確認登入狀態
-  }
-}).mount('#app');
+app.mount('#app');
+
+// 每個元件的資料都是獨立
