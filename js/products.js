@@ -12,8 +12,8 @@ const app =createApp({
       tempProduct: {
         imagesUrl: [],
       },
-      pagination: {},
       isNew: false,
+      pagination: {},
     }
   },
   mounted() {
@@ -41,7 +41,7 @@ const app =createApp({
 
       axios.get(url)
         .then((response) => {
-          const { products, pagination } = response.data;
+          const { products, pagination } = response.data; //(解構寫法)
           this.products = products;
           this.pagination = pagination;
         }).catch((err) => {
@@ -57,11 +57,11 @@ const app =createApp({
         this.isNew = true;
         productModal.show();
       } else if (isNew === 'edit') {
-        this.tempProduct = { ...item };
+        this.tempProduct = { ...item };//物件傳參考(淺拷貝)
         this.isNew = false;
         productModal.show();
       } else if (isNew === 'delete') {
-        this.tempProduct = { ...item };
+        this.tempProduct = { ...item };//物件傳參考(淺拷貝)
         delProductModal.show()
       }
     },
@@ -91,7 +91,7 @@ app.component('productModal', {
   },
   mounted() {
     productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-      keyboard: false,
+      keyboard: false, //是否能鍵盤操作
       backdrop: 'static'
     });
   },
@@ -138,7 +138,7 @@ app.component('delProductModal', {
   },
   mounted() {
     delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'), {
-      keyboard: false,
+      keyboard: false,//是否能鍵盤操作
       backdrop: 'static',
     });
   },
