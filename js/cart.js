@@ -1,10 +1,11 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
+const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
+const apiPath = 'beanhuang';
+
 const app = createApp({
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'beanhuang',
       cartData: {},
       products: [],
       productsId: '',
@@ -17,8 +18,7 @@ const app = createApp({
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
       axios.defaults.headers.common.Authorization = token;
       
-      const url = `${this.apiUrl}/api/user/check`;
-      axios.post(url)
+      axios.post(`${apiUrl}/api/user/check`)
         .then(() => {
           this.getData();
         })
@@ -27,9 +27,9 @@ const app = createApp({
           window.location = 'index.html';
         })
     },
-
+    
     getProducts() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/products/all`)
+      axios.get(`${apiUrl}/api/${apiPath}/products/all`)
         .then(res => {
           console.log(res);
           this.products = res.data.products;
@@ -41,7 +41,7 @@ const app = createApp({
     },
     //取得購物車
     getCart() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/cart`)
+      axios.get(`${apiUrl}/api/${apiPath}/cart`)
         .then(res => {
           console.log(res);
           this.cartData = res.data.data;
@@ -54,7 +54,7 @@ const app = createApp({
         qty,
       };
       this.isLoadingItem = id;
-      axios.post(`${this.apiUrl}/api/${this.apiPath}/cart`, { data }).then(res => {
+      axios.post(`${apiUrl}/api/${apiPath}/cart`, { data }).then(res => {
           console.log(res);
           this.getCart();
           this.$refs.productModal.closeModal();
@@ -65,7 +65,7 @@ const app = createApp({
     //刪除特定
     removeCartItem(id) {
       this.isLoadingItem = id;
-      axios.delete(`${this.apiUrl}/api/${this.apiPath}/cart/${id}`)
+      axios.delete(`${apiUrl}/api/${apiPath}/cart/${id}`)
         .then(() => {
           this.getCart();
           this.isLoadingItem = '';
@@ -74,13 +74,13 @@ const app = createApp({
 
     //刪除全部
     deleteAllCarts() {
-      axios.delete(`${this.apiUrl}/api/${this.apiPath}/carts`)
+      axios.delete(`${apiUrl}/api/${apiPath}/carts`)
         .then((response) => {
           alert(response.data.message);
           this.getCart();
-      }).catch((err) => {
+        }).catch((err) => {
           alert(err.data.message);
-      });
+        });
     },
 
     //更新數量
@@ -91,7 +91,7 @@ const app = createApp({
       };
 
       this.isLoadingItem = item.id;
-      axios.put(`${this.apiUrl}/api/${this.apiPath}/cart/${item.id}`, { data })
+      axios.put(`${apiUrl}/api/${apiPath}/cart/${item.id}`, { data })
         .then(res => {
           console.log(res);
           this.getCart(); //重新取得
@@ -112,8 +112,6 @@ app.component('product-modal', {
   template: '#userProductModal',
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'beanhuang',
       modal: {},
       product: {},
       qty: 1,
@@ -133,7 +131,7 @@ app.component('product-modal', {
       this.modal.hide();
     },
     getProduct() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/product/${this.id}`)
+      axios.get(`${apiUrl}/api/${apiPath}/product/${this.id}`)
         .then(res => {
           // console.log(res);
           this.product = res.data.product;
@@ -141,7 +139,6 @@ app.component('product-modal', {
     },
     addToCart() {
       // console.log(this.qty);
-      // console.log(this.product.product_id);
       this.$emit('add-cart', this.product.id, this.qty);
     },
   },
