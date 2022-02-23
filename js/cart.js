@@ -33,7 +33,8 @@ const app = createApp({
     },
 
     getProducts() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/products/all`)
+      const url = `${this.apiUrl}/api/${this.apiPath}/products/all`;
+      axios.get(url)
         .then(res => {
           console.log(res);
           this.products = res.data.products;
@@ -45,7 +46,8 @@ const app = createApp({
     },
     //取得購物車
     getCart() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/cart`)
+      const url = `${this.apiUrl}/api/${this.apiPath}/cart`;
+      axios.get(url)
         .then(res => {
           console.log(res);
           this.cartData = res.data.data;
@@ -58,7 +60,8 @@ const app = createApp({
         qty,
       };
       this.isLoadingItem = id;
-      axios.post(`${this.apiUrl}/api/${this.apiPath}/cart`, { data }).then(res => {
+      const url = `${this.apiUrl}/api/${this.apiPath}/cart`;
+      axios.post(url, { data }).then(res => {
           console.log(res);
           this.getCart();
           this.$refs.productModal.closeModal();
@@ -69,11 +72,23 @@ const app = createApp({
     //刪除特定
     removeCartItem(id) {
       this.isLoadingItem = id;
-      axios.delete(`${this.apiUrl}/api/${this.apiPath}/cart/${id}`)
+      const url = `${this.apiUrl}/api/${this.apiPath}/cart/${id}`;
+      axios.delete(url)
         .then(() => {
           this.getCart();
           this.isLoadingItem = '';
         });
+    },
+
+    //刪除全部
+    deleteAllCarts() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/carts`;
+      axios.delete(url).then((response) => {
+        alert(response.data.message);
+        this.getCart();
+      }).catch((err) => {
+        alert(err.data.message);
+      });
     },
 
     //更新數量
@@ -84,7 +99,8 @@ const app = createApp({
       };
 
       this.isLoadingItem = item.id;
-      axios.put(`${this.apiUrl}/api/${this.apiPath}/cart/${item.id}`, { data })
+      const url = `${this.apiUrl}/api/${this.apiPath}/cart/${item.id}`;
+      axios.put(url, { data })
         .then(res => {
           console.log(res);
           this.getCart(); //重新取得
@@ -124,7 +140,8 @@ app.component('product-modal', {
       this.modal.hide();
     },
     getProduct() {
-      axios.get(`${this.apiUrl}/api/${this.apiPath}/product/${this.id}`)
+      const url = `${this.apiUrl}/api/${this.apiPath}/product/${this.id}`;
+      axios.get(url)
         .then(res => {
           // console.log(res);
           this.product = res.data.product;
