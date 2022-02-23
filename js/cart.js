@@ -1,9 +1,5 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-// const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
-// const apiPath = 'beanhuang';
- 
-
 const app = createApp({
   data() {
     return {
@@ -116,6 +112,8 @@ app.component('product-modal', {
   template: '#userProductModal',
   data() {
     return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'beanhuang',
       modal: {},
       product: {},
       qty: 1,
