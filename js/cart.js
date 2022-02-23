@@ -143,7 +143,8 @@ app.component('product-modal', {
     },
     addToCart() {
       // console.log(this.qty);
-      this.$emit('add-cart', this.product.id, this.qty);
+      console.log(this.product.product_id);
+      this.$emit('add-cart', this.product.product_id, this.qty);
     },
   },
   mounted() {
