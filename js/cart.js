@@ -72,17 +72,6 @@ const app = createApp({
         });
     },
 
-    //刪除全部
-    deleteAllCarts() {
-      axios.delete(`${apiUrl}/api/${apiPath}/carts`)
-        .then((response) => {
-          alert(response.data.message);
-          this.getCart();
-        }).catch((err) => {
-          alert(err.data.message);
-        });
-    },
-
     //更新數量
     updateCartItem(item) {
       const data = {
@@ -139,7 +128,7 @@ app.component('product-modal', {
     },
     addToCart() {
       // console.log(this.qty);
-      this.$emit('add-cart', this.product.id, this.qty);
+      this.$emit('add-cart', this.product.id, parseInt(this.qty));
     },
   },
   mounted() {
