@@ -1,16 +1,15 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-//#region 定義規則
+//定義規則
 Object.keys(VeeValidateRules).forEach(rule => {
   if (rule !== 'default') {
     VeeValidate.defineRule(rule, VeeValidateRules[rule]);
   }
 });
 
-//#region 加入多國語系
+//多國語系
 VeeValidateI18n.loadLocaleFromURL("../zh_TW.json");
 
-// Activate the locale
 VeeValidate.configure({
     generateMessage: VeeValidateI18n.localize("zh_TW"),
     validateOnInput: true, // 調整為輸入字元立即進行驗證
