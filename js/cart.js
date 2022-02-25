@@ -10,7 +10,7 @@ defineRule('email', email);
 defineRule('min', min);
 defineRule('max', max);
 
-loadLocaleFromURL('../zh_TW.jsons');
+loadLocaleFromURL('https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json');
 
 configure({
   generateMessage: localize('zh_TW'),
@@ -106,7 +106,7 @@ const app = Vue.createApp({
           this.isLoadingItem = '';
         });
     },
-
+    
     createOrder() {
       const url = `${this.apiUrl}/api/${this.apiPath}/order`;
       const order = this.form;
