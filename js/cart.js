@@ -5,17 +5,19 @@ const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
 const { required, email, min, max } = VeeValidateRules;
 const { localize, loadLocaleFromURL } = VeeValidateI18n;
 
-//使用
+//規則
 defineRule('required', required);
 defineRule('email', email);
 defineRule('min', min);
 defineRule('max', max);
 
+// Activate the locale
 loadLocaleFromURL('../zh_TW.json');
 
+// Activate the locale
 configure({
-  generateMessage: localize('zh_TW'),
-  validateOnInput: true
+  generateMessage: localize('zh_TW'), //切換中文版
+  validateOnInput: true, // 調整為輸入字元立即進行驗證
 });
 
 
