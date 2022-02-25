@@ -21,7 +21,7 @@ createApp({
         const { token, expired } = res.data;
        
         document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-        window.location = 'cart.html';
+        window.location = 'products.html';
       }).catch((error) => {
         alert('帳號或密碼錯誤!');
         this.is_err = 1;

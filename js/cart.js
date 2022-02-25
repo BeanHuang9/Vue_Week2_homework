@@ -10,7 +10,7 @@ defineRule('email', email);
 defineRule('min', min);
 defineRule('max', max);
 
-loadLocaleFromURL('https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json');
+loadLocaleFromURL('../zh_TW.json');
 
 configure({
   generateMessage: localize('zh_TW'),
