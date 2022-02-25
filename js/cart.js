@@ -1,11 +1,11 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-//解構
+//解構宣告規則
 const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
 const { required, email, min, max } = VeeValidateRules;
-const { localize, loadLocaleFromURL } = VeeValidateI18n;
+const { localize, loadLocaleFromURL } = VeeValidateI18n; // 多國語系
 
-//規則
+//定義
 defineRule('required', required);
 defineRule('email', email);
 defineRule('min', min);
@@ -15,7 +15,7 @@ defineRule('max', max);
 // loadLocaleFromURL('../zh_TW.json'); 使用根目錄，但驗證會呈現英文
 loadLocaleFromURL('https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json');
 
-// Activate the locale
+// 設定
 configure({
   generateMessage: localize('zh_TW'), //切換中文版
   validateOnInput: true, // 調整為輸入字元立即進行驗證
@@ -137,6 +137,8 @@ app.component('product-modal', {
   template: '#userProductModal',
   data() {
     return {
+      apiUrl:'https://vue3-course-api.hexschool.io',
+      apiPath:'beanhuang',
       modal: {},
       product: {},
       qty: 1,
