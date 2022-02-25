@@ -1,35 +1,21 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
-const apiPath = 'beanhuang';
-
-const app = createApp({
+const app = Vue.createApp({
   data() {
     return {
+      apiUrl:'https://vue3-course-api.hexschool.io',
+      apiPath:'beanhuang',
       cartData: {},
       products: [],
       productsId: '',
       isLoadingItem: '',
+
     };
   },
 
   methods: {
-    checkAdmin() {
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-      axios.defaults.headers.common.Authorization = token;
-      
-      axios.post(`${apiUrl}/api/user/check`)
-        .then(() => {
-          this.getData();
-        })
-        .catch((err) => {
-          alert(err.data.message)
-          window.location = 'index.html';
-        })
-    },
-    
     getProducts() {
-      axios.get(`${apiUrl}/api/${apiPath}/products/all`)
+      axios.get(`${this.apiUrl}/api/${this.apiPath}/products/all`)
         .then(res => {
           console.log(res);
           this.products = res.data.products;
@@ -41,7 +27,7 @@ const app = createApp({
     },
     //取得購物車
     getCart() {
-      axios.get(`${apiUrl}/api/${apiPath}/cart`)
+      axios.get(`${this.apiUrl}/api/${this.apiPath}/cart`)
         .then(res => {
           console.log(res);
           this.cartData = res.data.data;
@@ -54,7 +40,7 @@ const app = createApp({
         qty,
       };
       this.isLoadingItem = id;
-      axios.post(`${apiUrl}/api/${apiPath}/cart`, { data }).then(res => {
+      axios.post(`${this.apiUrl}/api/${this.apiPath}/cart`, { data }).then(res => {
           console.log(res);
           this.getCart();
           this.$refs.productModal.closeModal();
@@ -65,7 +51,7 @@ const app = createApp({
     //刪除特定
     removeCartItem(id) {
       this.isLoadingItem = id;
-      axios.delete(`${apiUrl}/api/${apiPath}/cart/${id}`)
+      axios.delete(`${this.apiUrl}/api/${this.apiPath}/cart/${id}`)
         .then(() => {
           this.getCart();
           this.isLoadingItem = '';
@@ -80,7 +66,7 @@ const app = createApp({
       };
 
       this.isLoadingItem = item.id;
-      axios.put(`${apiUrl}/api/${apiPath}/cart/${item.id}`, { data })
+      axios.put(`${apiUrl}/api/${this.apiPath}/cart/${item.id}`, { data })
         .then(res => {
           console.log(res);
           this.getCart(); //重新取得
@@ -89,7 +75,6 @@ const app = createApp({
     },
   },
   mounted() {
-    this.checkAdmin();
     this.getProducts();
     this.getCart();
   },
@@ -120,7 +105,7 @@ app.component('product-modal', {
       this.modal.hide();
     },
     getProduct() {
-      axios.get(`${apiUrl}/api/${apiPath}/product/${this.id}`)
+      axios.get(`${this.apiUrl}/api/${this.apiPath}/product/${this.id}`)
         .then(res => {
           // console.log(res);
           this.product = res.data.product;
