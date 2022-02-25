@@ -164,12 +164,13 @@
             </table>
           </div>
           <div class="my-5 row justify-content-center">
-            <v-form ref="form" class="col-md-6" v-slot="{ errors }" >
+            <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit="createOrder">
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <v-field id="email" name="email" type="email" class="form-control"
-                        :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email" 
-                        ></v-field>
+                  :class="{ 'is-invalid': errors['email'] }" placeholder="請輸入 Email" 
+                  rules="email|required">
+                </v-field>
                 <error-message name="email" class="invalid-feedback"></error-message>
               </div>
 

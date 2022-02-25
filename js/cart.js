@@ -1,5 +1,22 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
+//解構
+const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
+const { required, email, min, max } = VeeValidateRules;
+const { localize, loadLocaleFromURL } = VeeValidateI18n;
+
+defineRule('required', required);
+defineRule('email', email);
+defineRule('min', min);
+defineRule('max', max);
+
+loadLocaleFromURL('../zh_TW.jsons');
+
+configure({
+  generateMessage: localize('zh_TW'),
+});
+
+
 const app = Vue.createApp({
   data() {
     return {
@@ -10,9 +27,25 @@ const app = Vue.createApp({
       productsId: '',
       isLoadingItem: '',
 
+      form: {
+        user: {
+          name: '',
+          email: '',
+          tel: '',
+          address: '',
+        },
+        message: '',
+      },
+
     };
   },
 
+  components: {
+    VForm: Form,
+    VField: Field,
+    ErrorMessage: ErrorMessage,
+  },
+  
   methods: {
     getProducts() {
       axios.get(`${this.apiUrl}/api/${this.apiPath}/products/all`)
@@ -66,13 +99,26 @@ const app = Vue.createApp({
       };
 
       this.isLoadingItem = item.id;
-      axios.put(`${apiUrl}/api/${this.apiPath}/cart/${item.id}`, { data })
+      axios.put(`${this.apiUrl}/api/${this.apiPath}/cart/${item.id}`, { data })
         .then(res => {
           console.log(res);
           this.getCart(); //重新取得
           this.isLoadingItem = '';
         });
     },
+
+    createOrder() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/order`;
+      const order = this.form;
+      axios.post(url, { data: order }).then((response) => {
+        alert(response.data.message);
+        this.$refs.form.resetForm();
+        this.getCart();
+      }).catch((err) => {
+        alert(err.data.message);
+      });
+    },
+
   },
   mounted() {
     this.getProducts();
