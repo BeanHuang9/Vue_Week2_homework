@@ -5,6 +5,7 @@ const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
 const { required, email, min, max } = VeeValidateRules;
 const { localize, loadLocaleFromURL } = VeeValidateI18n;
 
+//使用
 defineRule('required', required);
 defineRule('email', email);
 defineRule('min', min);
@@ -14,6 +15,7 @@ loadLocaleFromURL('../zh_TW.json');
 
 configure({
   generateMessage: localize('zh_TW'),
+  validateOnInput: true
 });
 
 
