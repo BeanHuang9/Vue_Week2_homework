@@ -12,7 +12,8 @@ defineRule('min', min);
 defineRule('max', max);
 
 // Activate the locale
-loadLocaleFromURL('../zh_TW.json');
+// loadLocaleFromURL('../zh_TW.json'); 使用根目錄，但驗證會呈現英文
+loadLocaleFromURL('https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json');
 
 // Activate the locale
 configure({
