@@ -1,65 +1,57 @@
-// import pagination from '../components/pagination.js'
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate
-const { required, email, min, max, numeric } = VeeValidateRules
-const { localize, loadLocaleFromURL } = VeeValidateI18n
-
-defineRule('required', required);
-defineRule('email', email);
-defineRule('min', min);
-defineRule('max', max);
-defineRule('numeric', numeric);
-loadLocaleFromURL('./zh_TW.json')
-configure({
-  generateMessage: localize('zh_TW'),
-   validateOnInput: true
+//#region 定義規則
+Object.keys(VeeValidateRules).forEach(rule => {
+  if (rule !== 'default') {
+    VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+  }
 });
+
+//#region 加入多國語系
+VeeValidateI18n.loadLocaleFromURL("../zh_TW.json");
+
+// Activate the locale
+VeeValidate.configure({
+    generateMessage: VeeValidateI18n.localize("zh_TW"),
+    validateOnInput: true, // 調整為輸入字元立即進行驗證
+});
+
 
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
 const apiPath = 'beanhuang';
 
-const app = Vue.createApp({
-  components: {
-    pagination,
-    VForm: Form,
-    VField: Field,
-    ErrorMessage: ErrorMessage,
-  },
-  
+const app = createApp({
   data() {
     return {
       cartData: {},
       products: [],
       productsId: '',
       isLoadingItem: '',
-
-      form: {
-        user: {
-          name: '',
-          email: '',
-          tel: '',
-          address: '',
-          message: '',
-        },
+      user: {
+        name: '',
+        email: '',
+        tel: '',
+        address: '',
+        phone: '',
+        message: '',
       },
     };
   },
 
   methods: {
-    checkAdmin() {
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-      axios.defaults.headers.common.Authorization = token;
+    // checkAdmin() {
+    //   const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    //   axios.defaults.headers.common.Authorization = token;
       
-      axios.post(`${apiUrl}/api/user/check`)
-        .then(() => {
-          this.getData();
-        })
-        .catch((err) => {
-          alert(err.data.message)
-          window.location = 'index.html';
-        })
-    },
+    //   axios.post(`${apiUrl}/api/user/check`)
+    //     .then(() => {
+    //       this.getData();
+    //     })
+    //     .catch((err) => {
+    //       alert(err.data.message)
+    //       window.location = 'index.html';
+    //     })
+    // },
     
     getProducts() {
       axios.get(`${apiUrl}/api/${apiPath}/products/all`)
@@ -121,20 +113,21 @@ const app = Vue.createApp({
         });
     },
 
+    // 電話檢核規則
+    isPhone(value) {
+      const phoneNumber = /^(09)[0-9]{8}$/
+      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
+    },
+    // 送出表單
     sendOrder() {
-      const url = `${apiUrl}/api/${apiPath}/order`
-      const order = this.form
-      axios.post(url, { data: order }).then((response) => {
-        alert(response.data.message)
-        this.$refs.form.resetForm()
-        this.getCarts()
-      }).catch((err) => {
-        alert(err.data.message)
-      })
+      console.log(this.user);
+      alert('表單送出')
+      //重設表單
+      this.$refs.form.resetForm();
     },
   },
   mounted() {
-    this.checkAdmin();
+    // this.checkAdmin();
     this.getProducts();
     this.getCart();
   },
@@ -180,5 +173,9 @@ app.component('product-modal', {
     this.modal = new bootstrap.Modal(this.$refs.modal);
   },
 });
+
+app.component("VForm", VeeValidate.Form);
+app.component("VField", VeeValidate.Field);
+app.component("ErrorMessage", VeeValidate.ErrorMessage);
 
 app.mount('#app');
