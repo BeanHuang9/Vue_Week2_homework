@@ -42,19 +42,19 @@ const app = createApp({
     ErrorMessage: ErrorMessage,
   },
   methods: {
-    checkAdmin() {
-      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-      axios.defaults.headers.common.Authorization = token;
+    // checkAdmin() {
+    //   const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    //   axios.defaults.headers.common.Authorization = token;
       
-      axios.post(`${apiUrl}/api/user/check`)
-        .then(() => {
-          this.getData();
-        })
-        .catch((err) => {
-          alert(err.data.message)
-          window.location = 'index.html';
-        })
-    },
+    //   axios.post(`${apiUrl}/api/user/check`)
+    //     .then(() => {
+    //       this.getData();
+    //     })
+    //     .catch((err) => {
+    //       alert(err.data.message)
+    //       window.location = 'index.html';
+    //     })
+    // },
     
     getProducts() {
       axios.get(`${apiUrl}/api/${apiPath}/products/all`)
@@ -127,10 +127,10 @@ const app = createApp({
         alert(err.data.message);
       });
     },
-    
+
   },
   mounted() {
-    this.checkAdmin();
+    // this.checkAdmin();
     this.getProducts();
     this.getCart();
   },
