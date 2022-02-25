@@ -12,7 +12,7 @@ const app = createApp({
       isLoadingItem: '',
     };
   },
- 
+
   methods: {
     checkAdmin() {
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -87,7 +87,6 @@ const app = createApp({
           this.isLoadingItem = '';
         });
     },
-    
   },
   mounted() {
     this.checkAdmin();
