@@ -1,4 +1,4 @@
-import pagination from '../components/pagination.js'
+// import pagination from '../components/pagination.js'
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
 const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate
