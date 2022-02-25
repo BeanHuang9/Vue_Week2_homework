@@ -88,9 +88,13 @@
               </tr>
             </tbody>
           </table>
+
+          <pagination :pages="pagination" @change-pages="getProducts"></pagination>
           <!-- 購物車列表 -->
           <div class="text-end">
-            <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">
+            <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts"
+              :disabled="cartData.carts?.length ===0"
+            >
               清空購物車
             </button>
           </div>
@@ -165,7 +169,7 @@
           </table>
         </div>
         <div class="my-5 row justify-content-center">
-        <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit="createOrder">
+        <v-form ref="form" class="col-md-6" v-slot="{ errors }" @submit="sendOrder">
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <v-field id="email" name="email" type="email" class="form-control"
@@ -184,7 +188,7 @@
           <div class="mb-3">
             <label for="tel" class="form-label">收件人電話</label>
             <v-field id="tel" name="電話" type="text" class="form-control" :class="{ 'is-invalid': errors['電話'] }"
-              placeholder="請輸入電話" rules="required|min:8|max:10" v-model="form.user.tel"></v-field>
+              placeholder="請輸入電話" rules="required|min:8|max:10|numeric" v-model="form.user.tel"></v-field>
             <error-message name="電話" class="invalid-feedback"></error-message>
           </div>
 
@@ -200,7 +204,8 @@
             <textarea name="" id="message" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
           </div>
           <div class="text-end">
-            <button type="submit" class="btn btn-danger">送出訂單</button>
+            <button type="submit" class="btn btn-danger"
+              :disabled="Object.keys(errors).length > 0 | cartData.carts?.length ===0">送出訂單</button>
           </div>
         </v-form>
         </div>
