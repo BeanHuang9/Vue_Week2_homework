@@ -1,6 +1,5 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
 const apiPath = 'beanhuang';
 
@@ -13,8 +12,21 @@ const app = createApp({
       isLoadingItem: '',
     };
   },
-
+ 
   methods: {
+    checkAdmin() {
+      const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+      axios.defaults.headers.common.Authorization = token;
+      
+      axios.post(`${apiUrl}/api/user/check`)
+        .then(() => {
+          this.getData();
+        })
+        .catch((err) => {
+          alert(err.data.message)
+          window.location = 'index.html';
+        })
+    },
     
     getProducts() {
       axios.get(`${apiUrl}/api/${apiPath}/products/all`)
@@ -75,8 +87,10 @@ const app = createApp({
           this.isLoadingItem = '';
         });
     },
+    
   },
   mounted() {
+    this.checkAdmin();
     this.getProducts();
     this.getCart();
   },
