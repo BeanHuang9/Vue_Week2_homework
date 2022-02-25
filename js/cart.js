@@ -1,5 +1,20 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
+const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
+const { required, email, min, max } = VeeValidateRules;
+const { localize, loadLocaleFromURL } = VeeValidateI18n;
+
+defineRule('required', required);
+defineRule('email', email);
+defineRule('min', min);
+defineRule('max', max);
+
+loadLocaleFromURL('https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/zh_TW.json');
+
+configure({
+  generateMessage: localize('zh_TW'),
+});
+
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
 const apiPath = 'beanhuang';
 
@@ -10,9 +25,22 @@ const app = createApp({
       products: [],
       productsId: '',
       isLoadingItem: '',
+      form: {
+        user: {
+          name: '',
+          email: '',
+          tel: '',
+          address: '',
+        },
+        message: '',
+      },
     };
   },
-
+  components: {
+    VForm: Form,
+    VField: Field,
+    ErrorMessage: ErrorMessage,
+  },
   methods: {
     checkAdmin() {
       const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
