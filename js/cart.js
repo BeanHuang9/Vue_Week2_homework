@@ -1,20 +1,5 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.9/vue.esm-browser.js';
 
-//定義規則
-Object.keys(VeeValidateRules).forEach(rule => {
-  if (rule !== 'default') {
-    VeeValidate.defineRule(rule, VeeValidateRules[rule]);
-  }
-});
-
-//多國語系
-VeeValidateI18n.loadLocaleFromURL("../zh_TW.json");
-
-VeeValidate.configure({
-    generateMessage: VeeValidateI18n.localize("zh_TW"),
-    validateOnInput: true, // 調整為輸入字元立即進行驗證
-});
-
 
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2'; 
 const apiPath = 'beanhuang';
@@ -26,31 +11,10 @@ const app = createApp({
       products: [],
       productsId: '',
       isLoadingItem: '',
-      user: {
-        name: '',
-        email: '',
-        tel: '',
-        address: '',
-        phone: '',
-        message: '',
-      },
     };
   },
 
   methods: {
-    // checkAdmin() {
-    //   const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    //   axios.defaults.headers.common.Authorization = token;
-      
-    //   axios.post(`${apiUrl}/api/user/check`)
-    //     .then(() => {
-    //       this.getData();
-    //     })
-    //     .catch((err) => {
-    //       alert(err.data.message)
-    //       window.location = 'index.html';
-    //     })
-    // },
     
     getProducts() {
       axios.get(`${apiUrl}/api/${apiPath}/products/all`)
@@ -111,22 +75,8 @@ const app = createApp({
           this.isLoadingItem = '';
         });
     },
-
-    // 電話檢核規則
-    isPhone(value) {
-      const phoneNumber = /^(09)[0-9]{8}$/
-      return phoneNumber.test(value) ? true : '需要正確的電話號碼'
-    },
-    // 送出表單
-    sendOrder() {
-      console.log(this.user);
-      alert('表單送出')
-      //重設表單
-      this.$refs.form.resetForm();
-    },
   },
   mounted() {
-    // this.checkAdmin();
     this.getProducts();
     this.getCart();
   },
@@ -172,9 +122,5 @@ app.component('product-modal', {
     this.modal = new bootstrap.Modal(this.$refs.modal);
   },
 });
-
-app.component("VForm", VeeValidate.Form);
-app.component("VField", VeeValidate.Field);
-app.component("ErrorMessage", VeeValidate.ErrorMessage);
 
 app.mount('#app');
